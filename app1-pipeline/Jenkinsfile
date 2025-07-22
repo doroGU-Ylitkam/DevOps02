@@ -2,11 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_REPO = 'vicryabenko/devops01'
+        DOCKER_HUB_REPO = 'vicryabenko/devops02'
         APP_PORT = '8081'
-        // Добавляем ссылку на оригинальный репозиторий
         APP_REPO_URL = 'https://github.com/foxolave/ServiceForStudy01.git'
-        // Путь к Dockerfile в CI-репозитории
         DOCKERFILE_PATH = 'app1-pipeline/Dockerfile'
     }
     
@@ -49,7 +47,7 @@ pipeline {
                 // Копируем Dockerfile из вашего CI-репозитория
                 script {
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                        userRemoteConfigs: [[url: 'https://github.com/YOUR-USER/ci-config-repo.git']])
+                        userRemoteConfigs: [[url: 'https://github.com/doroGU-Ylitkam/DevOps02/app1-pipeline.git']])
                     sh "cp ${env.DOCKERFILE_PATH} ."
                 }
             }
