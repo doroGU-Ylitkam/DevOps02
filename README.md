@@ -7,7 +7,7 @@ https://github.com/doroGU-Ylitkam/DevOps02.git
 
 Script Path, который необходимо указать в Pipeline
 ```shell
-app2-pipeline/Jenkinsfile/Jenkinsfile
+app1-pipeline/Jenkinsfile
 ```
 _____
 ### Пайплайн для сборки приложения 2
