@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_REPO = 'vicryabenko/devops02'
+        DOCKER_HUB_REPO = 'vicryabenko/devops02-app01'
         APP_PORT = '8081'
         APP_REPO_URL = 'https://github.com/foxolave/ServiceForStudy01.git'
         DOCKERFILE_PATH = 'app1-pipeline/Dockerfile'
