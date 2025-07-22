@@ -1,1 +1,62 @@
+pipeline {
+    agent any
 
+    environment {
+        DOCKER_HUB_REPO_APP1 = 'vicryabenko/devops02-app01'
+        DOCKER_HUB_REPO_APP2 = 'vicryabenko/devops02-app02'
+        CONFIG_REPO_URL = 'https://github.com/doroGU-Ylitkam/DevOps02-config-.git'
+
+        APP1_CONFIG = 'app1-config.yaml'
+        APP2_CONFIG = 'app2-config.yaml'
+    }
+
+    stages {
+        stage('Checkout Configs') {
+            steps {
+                echo '📥 Получение конфигурационных файлов...'
+                git url: env.CONFIG_REPO_URL, branch: 'main'
+            }
+        }
+
+        stage('Pull Docker Images') {
+            steps {
+                echo '🐳 Загрузка последних образов из Docker Hub...'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        docker.image("${env.DOCKER_HUB_REPO_APP1}:latest").pull()
+                        docker.image("${env.DOCKER_HUB_REPO_APP2}:latest").pull()
+                    }
+                }
+            }
+        }
+
+        stage('Run Containers') {
+            steps {
+                echo '🚀 Запуск контейнеров с конфигами...'
+                script {
+                    // Останавливаем и удаляем старые контейнеры
+                    sh 'docker stop app1 || true && docker rm app1 || true'
+                    sh 'docker stop app2 || true && docker rm app2 || true'
+
+                    // Запускаем с монтированием конфигов из корня репозитория
+                    sh """
+                    docker run -d \
+                        --name app1 \
+                        -v ${WORKSPACE}/${env.APP1_CONFIG}:/app/config.yaml \
+                        -p 8081:8081 \
+                        ${env.DOCKER_HUB_REPO_APP1}:latest
+
+                    docker run -d \
+                        --name app2 \
+                        -v ${WORKSPACE}/${env.APP2_CONFIG}:/app/config.yaml \
+                        -p 8082:8082 \
+                        ${env.DOCKER_HUB_REPO_APP2}:latest
+                    """
+                    
+                    // Проверяем, что контейнеры запустились
+                    sh 'docker ps'
+                }
+            }
+        }
+    }
+}
