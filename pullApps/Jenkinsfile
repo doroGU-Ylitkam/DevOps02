@@ -37,7 +37,7 @@ pipeline {
                     // Останавливаем и удаляем старые контейнеры
                     sh 'docker stop app1 || true && docker rm app1 || true'
                     sh 'docker stop app2 || true && docker rm app2 || true'
-                    sh cleanup
+                    sh 'cleanup'
         
                     // Запускаем с монтированием конфигов
                     sh "docker run -d --name app1 -v ${WORKSPACE}/${env.APP1_CONFIG}:/app/config.yaml -p 8081:8081 ${env.DOCKER_HUB_REPO_APP1}:latest"
