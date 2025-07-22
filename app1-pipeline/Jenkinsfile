@@ -47,7 +47,7 @@ pipeline {
                 // Копируем Dockerfile из вашего CI-репозитория
                 script {
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                              userRemoteConfigs: [[url: 'https://github.com/doroGU-Ylitkam/DevOps02/app1-pipeline.git']]])
+                              userRemoteConfigs: [[url: 'https://github.com/doroGU-Ylitkam/DevOps02.git']]])
                     sh "cp ${env.DOCKERFILE_PATH} ."
                 }
             }
